@@ -685,6 +685,51 @@
 </head>
 <body>
 
+<!-- ===== PASSWORD PROTECTION ===== -->
+<div id="authOverlay" style="
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    background:linear-gradient(135deg, #1b2a4a 0%, #2e4a7a 100%);
+    display:flex; align-items:center; justify-content:center; z-index:99999;
+">
+    <div style="
+        background:#fff; border-radius:16px; padding:48px 40px;
+        box-shadow:0 20px 60px rgba(0,0,0,0.3); text-align:center; max-width:400px; width:90%;
+    ">
+        <div style="font-size:48px; margin-bottom:16px;">🔒</div>
+        <h2 style="color:#1b2a4a; margin-bottom:8px; font-size:22px;">管理后台</h2>
+        <p style="color:#64748b; margin-bottom:24px; font-size:14px;">请输入管理员密码</p>
+        <input type="password" id="adminPwd" placeholder="密码" style="
+            width:100%; padding:14px 16px; border:2px solid #e2e8f0; border-radius:10px;
+            font-size:16px; outline:none; transition:border-color 0.3s;
+        " onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e2e8f0'"
+        onkeydown="if(event.key==='Enter')checkAdminPwd()">
+        <button onclick="checkAdminPwd()" style="
+            width:100%; margin-top:16px; padding:14px; background:#3b82f6; color:#fff;
+            border:none; border-radius:10px; font-size:16px; cursor:pointer; font-weight:600;
+        ">进入后台</button>
+        <p id="pwdError" style="color:#ef4444; margin-top:12px; font-size:14px; display:none;">密码错误，请重试</p>
+    </div>
+</div>
+<script>
+// Admin password — change this to your own password
+const ADMIN_HASH = 'retkikit2026';
+function checkAdminPwd() {
+    const input = document.getElementById('adminPwd').value;
+    if (input === ADMIN_HASH) {
+        document.getElementById('authOverlay').style.display = 'none';
+        sessionStorage.setItem('admin_auth', 'true');
+    } else {
+        document.getElementById('pwdError').style.display = 'block';
+        document.getElementById('adminPwd').value = '';
+        document.getElementById('adminPwd').focus();
+    }
+}
+// Auto-login if already authenticated in this browser session
+if (sessionStorage.getItem('admin_auth') === 'true') {
+    document.getElementById('authOverlay').style.display = 'none';
+}
+</script>
+
 <!-- ===== MOBILE MENU TOGGLE ===== -->
 <button class="menu-toggle" onclick="toggleSidebar()">&#9776;</button>
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
